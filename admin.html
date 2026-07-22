@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Revolution and Liberation</title>
+<link rel="icon" type="image/png" href="images/logo-placeholder.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="site-config.js"></script>
+<style>
+:root{ --paper:#ECE6D8; --ink:#201C18; --ink-soft:#5b5449; --crimson:#9C2B1F; --line:#c9bfa8; }
+*{box-sizing:border-box;}
+body{ margin:0; background:var(--paper); color:var(--ink); font-family:'Inter',sans-serif; }
+h1,h2{ font-family:'Fraunces',serif; }
+header{ border-bottom:3px double var(--ink); padding:18px 24px; display:flex; justify-content:space-between; align-items:center; }
+main{ max-width:760px; margin:0 auto; padding:32px 20px 80px; }
+label{ display:block; font-size:13px; font-weight:600; margin:16px 0 6px; }
+input,select,textarea{
+  width:100%; padding:10px; border:1px solid var(--line); background:#fff;
+  font-family:inherit; font-size:16px; border-radius:3px;
+}
+textarea{ min-height:100px; resize:vertical; }
+button{
+  font-family:inherit; cursor:pointer; border:none; background:var(--ink); color:var(--paper);
+  padding:12px 20px; font-size:15px; border-radius:3px; margin-top:18px; min-height:44px;
+}
+button.secondary{ background:transparent; color:var(--crimson); border:1px solid var(--crimson); }
+button:disabled{ opacity:.5; cursor:default; }
+.card{ background:#fff; border:1px solid var(--line); padding:20px; border-radius:4px; margin-bottom:20px; }
+.notice{ font-size:13px; color:var(--ink-soft); margin-top:8px; }
+.error{ color:var(--crimson); font-size:13px; margin-top:8px; }
+.lang-block{ border-left:3px solid var(--line); padding-left:14px; margin-top:20px; }
+.post-row{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:12px 0; border-bottom:1px solid var(--line); font-size:14px; flex-wrap:wrap; }
+.hidden{ display:none; }
+.setup-warning{ background:#fff3e0; border:1px solid #e0b060; padding:14px; border-radius:4px; font-size:13px; margin-bottom:20px; }
+.info-box{ background:#eef3ee; border:1px solid #9fb8a0; padding:12px 14px; border-radius:4px; font-size:13px; margin-bottom:20px; }
+.photo-choice{
+  width:52px; height:52px; border-radius:50%; object-fit:cover; cursor:pointer;
+  border:3px solid transparent; display:block; padding:0;
+}
+.photo-choice.selected{ border-color:var(--crimson); }
+.photo-choice-empty{ font-size:12px; color:var(--ink-soft); }
+
+@media(max-width:600px){
+  header{ padding:14px 16px; }
+  main{ padding:20px 14px 60px; }
+  .card{ padding:16px; }
+  button{ width:100%; }
+  header button{ width:auto; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 style="font-size:22px;margin:0;">Admin</h1>
+  <button id="logoutBtn" class="secondary hidden">Log out</button>
+</header>
+
+<main>
+
+  <div id="setupWarning" class="setup-warning hidden">
+    This site isn't linked to a GitHub repo yet. Open <code>site-config.js</code> and fill in your GitHub username and repo name.
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginBox" class="card">
+    <h2 style="font-size:18px;margin-top:0;">Sign in</h2>
+    <label for="tokenInput">GitHub personal access token</label>
+    <input id="tokenInput" type="password" autocomplete="off" placeholder="ghp_...">
+    <button id="loginBtn">Sign in</button>
+    <div id="loginError" class="error"></div>
+    <p class="notice">
+      Don't have one yet? On GitHub go to <strong>Settings → Developer settings →
+      Personal access tokens → Fine-grained tokens → Generate new token</strong>.
+      Under "Repository access" choose <strong>only this repository</strong>, and
+      under "Permissions" set <strong>Contents: Read and write</strong>. Nothing
+      else is needed. Paste the token above — it's kept only in this browser tab
+      and is never saved anywhere in the site's code.
+    </p>
+  </div>
+
+  <!-- NEW POST FORM -->
+  <div id="formBox" class="card hidden">
+    <h2 style="font-size:18px;margin-top:0;">New post</h2>
+    <div class="info-box">Files must be under 20MB. Publishing takes 30–60 seconds to appear live, since GitHub has to rebuild the site.</div>
+
+    <label for="category">Category</label>
+    <select id="category">
+      <option value="articles">Articles</option>
+      <option value="art">Art</option>
+      <option value="docs">Documents</option>
+    </select>
+
+    <label id="fileInputLabel" for="fileInput">Thumbnail / featured image — optional, under 20MB</label>
+    <input id="fileInput" type="file" accept="image/*">
+    <div id="uploadStatus" class="notice"></div>
+
+    <div id="docFileBlock" class="hidden">
+      <label for="docFileInput">Document file (PDF) — required for documents, under 20MB</label>
+      <input id="docFileInput" type="file" accept=".pdf">
+      <div id="docFileStatus" class="notice"></div>
+    </div>
+
+    <label for="authorName">Author name (Latin script — used for English & French)</label>
+    <input id="authorName" placeholder="e.g. Sara Amrani">
+
+    <label for="authorNameAr">Author name in Arabic — optional (falls back to the name above if left blank)</label>
+    <input id="authorNameAr" placeholder="مثال: سارة عمراني" dir="rtl">
+
+    <label for="authorPhotoInput">Author profile picture — optional, under 20MB (shown at 60×60px on the site)</label>
+    <input id="authorPhotoInput" type="file" accept="image/*">
+    <div id="authorPhotoStatus" class="notice"></div>
+
+    <div id="authorPhotoGalleryWrap">
+      <label style="margin-top:10px;">Or pick a photo already used before</label>
+      <div id="authorPhotoGallery" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      <div id="authorPhotoGalleryStatus" class="notice"></div>
+    </div>
+
+    <div class="lang-block">
+      <strong>English</strong> (required)
+      <label>Title</label><input id="en_title">
+      <label>Short summary</label><input id="en_excerpt">
+      <label>Full text (leave blank for document posts)</label><textarea id="en_body"></textarea>
+    </div>
+    <div class="lang-block">
+      <strong>Français</strong> (required)
+      <label>Titre</label><input id="fr_title">
+      <label>Résumé court</label><input id="fr_excerpt">
+      <label>Texte complet (laisser vide pour un document)</label><textarea id="fr_body"></textarea>
+    </div>
+    <div class="lang-block">
+      <strong>العربية</strong> (مطلوب)
+      <label>العنوان</label><input id="ar_title">
+      <label>ملخص قصير</label><input id="ar_excerpt">
+      <label>النص الكامل (اتركه فارغًا للمستندات)</label><textarea id="ar_body"></textarea>
+    </div>
+
+    <button id="publishBtn">Publish post</button>
+    <div id="publishError" class="error"></div>
+    <div id="publishSuccess" class="notice"></div>
+  </div>
+
+  <!-- EXISTING POSTS -->
+  <div id="listBox" class="card hidden">
+    <h2 style="font-size:18px;margin-top:0;">Published posts</h2>
+    <div id="postList"></div>
+  </div>
+
+</main>
+
+<script>
+if(typeof GITHUB_OWNER === "undefined" || GITHUB_OWNER === "PASTE_YOUR_GITHUB_USERNAME"){
+  document.getElementById("setupWarning").classList.remove("hidden");
+} else {
+  const API = "https://api.github.com/repos/" + GITHUB_OWNER + "/" + GITHUB_REPO;
+  let token = sessionStorage.getItem("admin_token") || "";
+
+  const loginBox = document.getElementById("loginBox");
+  const formBox = document.getElementById("formBox");
+  const listBox = document.getElementById("listBox");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  function ghHeaders(){
+    return {
+      "Authorization": "token " + token,
+      "Accept": "application/vnd.github+json"
+    };
+  }
+
+  function updateFormForCategory(){
+    const category = document.getElementById("category").value;
+    const isDoc = category === "docs";
+    document.getElementById("docFileBlock").classList.toggle("hidden", !isDoc);
+    document.getElementById("fileInputLabel").textContent = isDoc
+      ? "Thumbnail image for the document — optional, under 20MB"
+      : "Thumbnail / featured image — optional, under 20MB";
+  }
+  document.getElementById("category").onchange = updateFormForCategory;
+  updateFormForCategory();
+
+  function showLoggedIn(){
+    loginBox.classList.add("hidden");
+    formBox.classList.remove("hidden");
+    listBox.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
+    loadPostList();
+    loadExistingAuthorPhotos();
+  }
+  function showLoggedOut(){
+    loginBox.classList.remove("hidden");
+    formBox.classList.add("hidden");
+    listBox.classList.add("hidden");
+    logoutBtn.classList.add("hidden");
+  }
+
+  async function checkToken(){
+    if(!token) return showLoggedOut();
+    try{
+      const res = await fetch(API, { headers: ghHeaders() });
+      if(res.ok) showLoggedIn(); else { sessionStorage.removeItem("admin_token"); token=""; showLoggedOut(); }
+    }catch(e){ showLoggedOut(); }
+  }
+  checkToken();
+
+  document.getElementById("loginBtn").onclick = async ()=>{
+    const errorEl = document.getElementById("loginError");
+    errorEl.textContent = "";
+    const candidate = document.getElementById("tokenInput").value.trim();
+    if(!candidate){ errorEl.textContent = "Paste your token first."; return; }
+    try{
+      const res = await fetch(API, { headers: { "Authorization":"token "+candidate, "Accept":"application/vnd.github+json" } });
+      if(!res.ok){ errorEl.textContent = "That token didn't work — check it has access to this repo."; return; }
+      token = candidate;
+      sessionStorage.setItem("admin_token", token);
+      showLoggedIn();
+    }catch(e){ errorEl.textContent = "Could not reach GitHub: " + e.message; }
+  };
+
+  logoutBtn.onclick = ()=>{
+    sessionStorage.removeItem("admin_token");
+    token = "";
+    showLoggedOut();
+  };
+
+  // ---- File → base64 helper ----
+  function fileToBase64(file){
+    return new Promise((resolve,reject)=>{
+      const reader = new FileReader();
+      reader.onload = ()=> resolve(reader.result.split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const MAX_BYTES = 20 * 1024 * 1024; // 20MB
+
+  // ---- Upload a file into the repo, return its site-relative path ----
+  async function uploadToRepo(file, folder){
+    if(file.size > MAX_BYTES) throw new Error("That file is over 20MB — please compress or resize it first.");
+    const base64 = await fileToBase64(file);
+    const path = folder + "/" + Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+    const res = await fetch(API + "/contents/" + path, {
+      method: "PUT",
+      headers: { ...ghHeaders(), "Content-Type":"application/json" },
+      body: JSON.stringify({ message: "Upload " + path, content: base64, branch: GITHUB_BRANCH })
+    });
+    if(!res.ok){ const e = await res.json().catch(()=>({})); throw new Error(e.message || "Upload failed"); }
+    return path;
+  }
+
+  let uploadedThumbnail = null;
+  document.getElementById("fileInput").onchange = async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const status = document.getElementById("uploadStatus");
+    status.textContent = "Uploading…";
+    try{
+      uploadedThumbnail = await uploadToRepo(file, "images/thumbnails");
+      status.textContent = "✓ Uploaded: " + file.name;
+    }catch(err){
+      status.textContent = "";
+      document.getElementById("publishError").textContent = err.message;
+    }
+  };
+
+  let uploadedDocFile = null;
+  document.getElementById("docFileInput").onchange = async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const status = document.getElementById("docFileStatus");
+    status.textContent = "Uploading…";
+    try{
+      uploadedDocFile = await uploadToRepo(file, "uploads");
+      status.textContent = "✓ Uploaded: " + file.name;
+    }catch(err){
+      status.textContent = "";
+      document.getElementById("publishError").textContent = err.message;
+    }
+  };
+
+  let uploadedAuthorPhoto = null;
+  document.getElementById("authorPhotoInput").onchange = async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const status = document.getElementById("authorPhotoStatus");
+    status.textContent = "Uploading…";
+    document.querySelectorAll("#authorPhotoGallery .photo-choice").forEach(el=> el.classList.remove("selected"));
+    try{
+      uploadedAuthorPhoto = await uploadToRepo(file, "images/authors");
+      status.textContent = "✓ Uploaded: " + file.name;
+    }catch(err){
+      status.textContent = "";
+      document.getElementById("publishError").textContent = err.message;
+    }
+  };
+
+  // ---- Let the admin reuse a previously uploaded author photo instead of uploading again ----
+  async function loadExistingAuthorPhotos(){
+    const wrap = document.getElementById("authorPhotoGallery");
+    const status = document.getElementById("authorPhotoGalleryStatus");
+    wrap.innerHTML = "";
+    status.textContent = "Loading…";
+    try{
+      const res = await fetch(API + "/contents/images/authors?ref=" + GITHUB_BRANCH, { headers: ghHeaders() });
+      if(res.status === 404){ status.textContent = "No author photos uploaded yet."; return; }
+      if(!res.ok) throw new Error("Could not load existing photos");
+      const files = await res.json();
+      const images = files.filter(f=> f.type === "file" && /\.(png|jpe?g|gif|webp)$/i.test(f.name));
+      if(!images.length){ status.textContent = "No author photos uploaded yet."; return; }
+      status.textContent = "";
+      images.forEach(f=>{
+        const img = document.createElement("img");
+        img.src = f.download_url;
+        img.className = "photo-choice";
+        img.title = f.name;
+        img.alt = f.name;
+        img.onclick = ()=>{
+          uploadedAuthorPhoto = f.path;
+          document.getElementById("authorPhotoInput").value = "";
+          document.getElementById("authorPhotoStatus").textContent = "";
+          wrap.querySelectorAll(".photo-choice").forEach(el=> el.classList.remove("selected"));
+          img.classList.add("selected");
+        };
+        wrap.appendChild(img);
+      });
+    }catch(err){
+      status.textContent = "Could not load existing photos: " + err.message;
+    }
+  }
+
+  // ---- Read + write data/posts.json ----
+  async function getPostsFile(){
+    const res = await fetch(API + "/contents/data/posts.json?ref=" + GITHUB_BRANCH, { headers: ghHeaders() });
+    if(!res.ok) throw new Error("Could not read data/posts.json — make sure that file exists in the repo.");
+    const data = await res.json();
+    const posts = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+    return { posts, sha: data.sha };
+  }
+  async function savePostsFile(posts, sha, message){
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2))));
+    const res = await fetch(API + "/contents/data/posts.json", {
+      method: "PUT",
+      headers: { ...ghHeaders(), "Content-Type":"application/json" },
+      body: JSON.stringify({ message, content, sha, branch: GITHUB_BRANCH })
+    });
+    if(!res.ok){ const e = await res.json().catch(()=>({})); throw new Error(e.message || "Could not save"); }
+  }
+
+  document.getElementById("publishBtn").onclick = async ()=>{
+    const errorEl = document.getElementById("publishError");
+    const successEl = document.getElementById("publishSuccess");
+    const btn = document.getElementById("publishBtn");
+    errorEl.textContent = ""; successEl.textContent = "";
+
+    const category = document.getElementById("category").value;
+    const TYPE_BY_CATEGORY = { articles:"article", art:"art", docs:"document" };
+    const type = TYPE_BY_CATEGORY[category];
+    const icon = category === "art" ? "🎨" : category === "docs" ? "📄" : "📰";
+
+    const en = {
+      title: document.getElementById("en_title").value.trim(),
+      excerpt: document.getElementById("en_excerpt").value.trim(),
+      body: document.getElementById("en_body").value.trim()
+    };
+    const fr = {
+      title: document.getElementById("fr_title").value.trim(),
+      excerpt: document.getElementById("fr_excerpt").value.trim(),
+      body: document.getElementById("fr_body").value.trim()
+    };
+    const ar = {
+      title: document.getElementById("ar_title").value.trim(),
+      excerpt: document.getElementById("ar_excerpt").value.trim(),
+      body: document.getElementById("ar_body").value.trim()
+    };
+
+    const missing = [];
+    [["English", en], ["Français", fr], ["العربية", ar]].forEach(([label, block])=>{
+      if(!block.title || !block.excerpt) missing.push(label);
+      if(type !== "document" && !block.body) missing.push(label + " (full text)");
+    });
+    const author = document.getElementById("authorName").value.trim();
+    const authorAr = document.getElementById("authorNameAr").value.trim();
+    if(!author) missing.push("Author name");
+    if(type === "document" && !uploadedDocFile) missing.push("Document file (PDF)");
+    if(missing.length){
+      errorEl.textContent = "Please fill in: " + missing.join(", ");
+      return;
+    }
+
+    const post = {
+      id: "post_" + Date.now(),
+      ts: Date.now(),
+      category, type, icon, en, fr, ar, author,
+      authorAr: authorAr || null,
+      authorPhoto: uploadedAuthorPhoto || null,
+      thumbnailUrl: uploadedThumbnail || null,
+      date: new Date().toISOString().slice(0,10),
+      fileUrl: type === "document" ? (uploadedDocFile || null) : null
+    };
+
+    btn.disabled = true;
+    try{
+      const { posts, sha } = await getPostsFile();
+      posts.push(post);
+      await savePostsFile(posts, sha, "Add post: " + en.title);
+      successEl.textContent = "✓ Published. It'll be live on the site in about a minute.";
+      document.querySelectorAll("#formBox input, #formBox textarea").forEach(el=> el.value = "");
+      uploadedThumbnail = null; uploadedDocFile = null; uploadedAuthorPhoto = null;
+      document.getElementById("uploadStatus").textContent = "";
+      document.getElementById("docFileStatus").textContent = "";
+      document.getElementById("authorPhotoStatus").textContent = "";
+      document.querySelectorAll("#authorPhotoGallery .photo-choice").forEach(el=> el.classList.remove("selected"));
+      updateFormForCategory();
+      loadPostList();
+      loadExistingAuthorPhotos();
+    }catch(err){
+      errorEl.textContent = "Could not publish: " + err.message;
+    }
+    btn.disabled = false;
+  };
+
+  async function loadPostList(){
+    const listEl = document.getElementById("postList");
+    listEl.innerHTML = "Loading…";
+    try{
+      const { posts } = await getPostsFile();
+      if(!posts.length){ listEl.innerHTML = "<p class='notice'>No posts published from here yet.</p>"; return; }
+      listEl.innerHTML = "";
+      posts.slice().reverse().forEach(p=>{
+        const row = document.createElement("div");
+        row.className = "post-row";
+        row.innerHTML = `<span>${p.en.title} <span class="notice">(${p.category}, ${p.date}${p.author ? ', ' + p.author : ''})</span></span>`;
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.className = "secondary";
+        delBtn.style.marginTop = "0";
+        delBtn.onclick = async ()=>{
+          const sure = confirm(
+            'Are you sure you want to delete "' + p.en.title + '"?\n\n' +
+            'This will remove it from the site permanently and cannot be undone.'
+          );
+          if(!sure) return;
+          delBtn.disabled = true;
+          delBtn.textContent = "Deleting…";
+          try{
+            // Re-fetch right before deleting so we always have the current sha
+            // and current post list, even if something else changed it in the meantime.
+            const { posts: current, sha } = await getPostsFile();
+            if(!current.some(x=> x.id === p.id)){
+              alert("This post was already removed.");
+              loadPostList();
+              return;
+            }
+            const updated = current.filter(x=> x.id !== p.id);
+            await savePostsFile(updated, sha, "Delete post: " + p.en.title);
+            loadPostList();
+          }catch(err){
+            alert("Could not delete: " + err.message);
+            delBtn.disabled = false;
+            delBtn.textContent = "Delete";
+          }
+        };
+        row.appendChild(delBtn);
+        listEl.appendChild(row);
+      });
+    }catch(err){
+      listEl.innerHTML = "<p class='notice'>Could not load posts: " + err.message + "</p>";
+    }
+  }
+}
+</script>
+</body>
+</html>
