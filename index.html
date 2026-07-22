@@ -7,7 +7,6 @@
 <link rel="icon" type="image/png" href="images/LG1.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
-<!-- Posts published from admin.html are loaded from data/posts.json below -->
 <style>
 
 :root{
@@ -289,7 +288,6 @@ body.rtl .category-nav button{ letter-spacing:0; }
   </div>
   <div class="nav-row">
     <nav class="category-nav" id="categoryNav"></nav>
-    <!-- Instagram icon placeholder — swap images/insta.png for your icon, and INSTAGRAM_LINK_HERE for your account URL -->
     <a class="insta-link" href="https://archive.org/details/@20061956/lists/3/documents" target="_blank" rel="noopener" aria-label="Instagram">
       <img class="insta-icon" src="images/insta.png" alt="Instagram">
     </a>
@@ -302,33 +300,28 @@ body.rtl .category-nav button{ letter-spacing:0; }
 
 <main>
 
-  <!-- HOME VIEW -->
   <section class="view active" id="view-home">
     <div class="featured" id="featuredSlot"></div>
     <h2 class="grid-heading" data-i18n="latestHeading">Latest</h2>
     <div class="post-grid" id="latestGrid"></div>
   </section>
 
-  <!-- CATEGORY VIEW -->
   <section class="view" id="view-category">
     <h2 class="grid-heading" id="categoryHeading"></h2>
     <div class="post-grid" id="categoryGrid"></div>
   </section>
 
-  <!-- POST DETAIL VIEW -->
   <section class="view" id="view-post">
     <a href="#" class="back-link" id="backLink" data-i18n="backLink">Back to home</a>
     <div class="post-detail" id="postDetail"></div>
   </section>
 
-  <!-- SEARCH RESULTS VIEW -->
   <section class="view" id="view-search">
     <h2 class="grid-heading" id="searchHeading"></h2>
     <p class="search-meta" id="searchMeta"></p>
     <div class="post-grid" id="searchGrid"></div>
   </section>
 
-  <!-- ABOUT VIEW -->
   <section class="view" id="view-about">
     <div class="about-box">
       <h1 data-i18n="aboutTitle">About us</h1>
@@ -341,10 +334,8 @@ body.rtl .category-nav button{ letter-spacing:0; }
 </main>
 
 <footer>
-  <!-- Banner placeholder — replace images/bann.png with your real banner -->
   <img class="footer-banner" src="images/bann.png" alt="Banner">
   <span data-i18n="footerText">© 2026 by Assam ANZBAY ⴰⵙⵙⴰⵎ ⴰⵏⵣⴱⴰⵢ</span>
-  <!-- Logo placeholder — replace images/revoltflag.png with your real logo -->
   <img class="footer-flag" src="images/revoltflag.png" alt="">
 </footer>
 
@@ -401,7 +392,6 @@ const UI_TEXT = {
 
 
 const POSTS = [];
-// Sample/template posts removed — real posts are loaded from data/posts.json via the admin panel below.
 
 
 
@@ -593,7 +583,6 @@ function renderSearch(){
 }
 
 function thumbSrc(post){
-  // thumbnailUrl is the current field; fileUrl fallback covers posts published before this field existed
   return post.thumbnailUrl || (post.type !== "document" ? post.fileUrl : null);
 }
 
@@ -726,15 +715,14 @@ else{
     showView("home");
 }
 
-/* ---- Load posts added from admin.html — plain file on this same site ---- */
 (function loadDynamicPosts(){
   fetch("data/posts.json?v=" + Date.now(), {cache:"no-store"})
     .then(r=> r.ok ? r.json() : [])
     .then(posts=>{
-      posts.forEach(p=> POSTS.push(p)); // order doesn't matter here — every view sorts by postTime()
+      posts.forEach(p=> POSTS.push(p)); 
       renderCurrentView();
     })
-    .catch(()=>{ /* file not published yet — site still works with the sample posts above */ });
+    .catch(()=>{  });
 })();
 </script>
 </body>
