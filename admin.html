@@ -63,7 +63,6 @@ button:disabled{ opacity:.5; cursor:default; }
     This site isn't linked to a GitHub repo yet. Open <code>site-config.js</code> and fill in your GitHub username and repo name.
   </div>
 
-  <!-- LOGIN -->
   <div id="loginBox" class="card">
     <h2 style="font-size:18px;margin-top:0;">Sign in</h2>
     <label for="tokenInput">GitHub personal access token</label>
@@ -80,7 +79,6 @@ button:disabled{ opacity:.5; cursor:default; }
     </p>
   </div>
 
-  <!-- NEW POST FORM -->
   <div id="formBox" class="card hidden">
     <h2 style="font-size:18px;margin-top:0;">New post</h2>
     <div class="info-box">Files must be under 20MB. Publishing takes 30–60 seconds to appear live, since GitHub has to rebuild the site.</div>
@@ -142,7 +140,6 @@ button:disabled{ opacity:.5; cursor:default; }
     <div id="publishSuccess" class="notice"></div>
   </div>
 
-  <!-- EXISTING POSTS -->
   <div id="listBox" class="card hidden">
     <h2 style="font-size:18px;margin-top:0;">Published posts</h2>
     <div id="postList"></div>
@@ -224,7 +221,6 @@ if(typeof GITHUB_OWNER === "undefined" || GITHUB_OWNER === "PASTE_YOUR_GITHUB_US
     showLoggedOut();
   };
 
-  // ---- File → base64 helper ----
   function fileToBase64(file){
     return new Promise((resolve,reject)=>{
       const reader = new FileReader();
@@ -236,7 +232,6 @@ if(typeof GITHUB_OWNER === "undefined" || GITHUB_OWNER === "PASTE_YOUR_GITHUB_US
 
   const MAX_BYTES = 20 * 1024 * 1024; // 20MB
 
-  // ---- Upload a file into the repo, return its site-relative path ----
   async function uploadToRepo(file, folder){
     if(file.size > MAX_BYTES) throw new Error("That file is over 20MB — please compress or resize it first.");
     const base64 = await fileToBase64(file);
@@ -296,7 +291,6 @@ if(typeof GITHUB_OWNER === "undefined" || GITHUB_OWNER === "PASTE_YOUR_GITHUB_US
     }
   };
 
-  // ---- Let the admin reuse a previously uploaded author photo instead of uploading again ----
   async function loadExistingAuthorPhotos(){
     const wrap = document.getElementById("authorPhotoGallery");
     const status = document.getElementById("authorPhotoGalleryStatus");
@@ -330,7 +324,6 @@ if(typeof GITHUB_OWNER === "undefined" || GITHUB_OWNER === "PASTE_YOUR_GITHUB_US
     }
   }
 
-  // ---- Read + write data/posts.json ----
   async function getPostsFile(){
     const res = await fetch(API + "/contents/data/posts.json?ref=" + GITHUB_BRANCH, { headers: ghHeaders() });
     if(!res.ok) throw new Error("Could not read data/posts.json — make sure that file exists in the repo.");
@@ -445,8 +438,6 @@ if(typeof GITHUB_OWNER === "undefined" || GITHUB_OWNER === "PASTE_YOUR_GITHUB_US
           delBtn.disabled = true;
           delBtn.textContent = "Deleting…";
           try{
-            // Re-fetch right before deleting so we always have the current sha
-            // and current post list, even if something else changed it in the meantime.
             const { posts: current, sha } = await getPostsFile();
             if(!current.some(x=> x.id === p.id)){
               alert("This post was already removed.");
