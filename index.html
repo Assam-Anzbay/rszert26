@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revolution and Liberation</title>
+<link rel="icon" type="image/png" href="images/LG1.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --paper:#ECE6D8;
+  --paper-deep:#E2D9C4;
+  --ink:#201C18;
+  --grey:#f7dea9;
+  --ink-soft:#5b5449;
+  --crimson:#000000;
+  --navy:#233A52;
+  --gold:#A9863A;
+  --line:#c9bfa8;
+  --radius:2px;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+[lang="ar"] body, body.rtl{ font-family:'Noto Naskh Arabic','Inter',sans-serif; }
+
+h1,h2,h3,.serif{ font-family:'Fraunces','Noto Naskh Arabic',serif; }
+.mono{ font-family:'IBM Plex Mono',monospace; letter-spacing:.04em; }
+
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+button{ font-family:inherit; cursor:pointer; }
+
+::selection{ background:var(--crimson); color:var(--paper); }
+:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+
+.masthead{
+  border-bottom:4px double var(--ink);
+  padding:22px 24px 16px;
+  background:var(--crimson);
+  color:var(--paper);
+}
+.masthead .brand-tagline{ color:#ecd9d4; }
+.masthead .edition-stamp{ border-color:var(--paper); color:var(--paper); }
+.masthead .lang-switch button{ border-color:var(--paper); color:var(--paper); }
+.masthead .lang-switch button.active{ background:var(--paper); color:var(--crimson); }
+.masthead-top{
+  display:flex; align-items:center; justify-content:space-between;
+  max-width:1100px; margin:0 auto 14px; gap:16px; flex-wrap:wrap;
+}
+.brand{ display:flex; align-items:center; gap:14px; }
+
+.logo-placeholder{
+  width:80px; height:80px; flex-shrink:0;
+}
+.brand-title{ font-size:34px; font-weight:700; line-height:1; }
+.brand-tagline{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
+
+.masthead-tools{ display:flex; align-items:center; gap:18px; }
+
+.edition-stamp{
+  width:64px; height:64px; border-radius:50%;
+  border:1.5px solid var(--crimson);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-size:10px; color:var(--crimson); text-align:center; line-height:1.2;
+  transform:rotate(-8deg); flex-shrink:0;
+}
+.edition-stamp b{ font-size:12px; display:block; line-height:1.15; }
+
+.lang-switch{ display:flex; gap:6px; }
+.lang-switch button{
+  border:1px solid var(--ink); background:transparent; color:var(--ink);
+  padding:5px 9px; font-size:12px; border-radius:var(--radius);
+  display:flex; align-items:center; gap:6px;
+}
+.lang-switch button.active{ background:var(--ink); color:var(--paper); }
+.lang-switch img{ width:20px; height:14px; display:block; }
+
+.nav-row{
+  max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:10px;
+}
+
+.insta-link{ flex-shrink:0; display:flex; align-items:center; }
+.insta-icon{ width:50px; height:50px; display:block; }
+
+.category-nav{
+  flex:1; min-width:0; display:flex; gap:4px;
+  overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+}
+.category-nav::-webkit-scrollbar{ display:none; }
+.category-nav button{
+  background:var(--paper); border:1px solid var(--ink); border-bottom:none;
+  padding:9px 18px; font-size:13px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.06em; border-radius:6px 6px 0 0; position:relative; top:1px;
+  color:var(--ink-soft); flex-shrink:0; white-space:nowrap;
+}
+.category-nav button.active{ background:var(--ink); color:var(--paper); }
+
+.search-bar{
+  max-width:1100px; margin:12px auto 0; display:flex; gap:8px;
+}
+.search-input{
+  flex:1; min-width:0; border:1px solid var(--ink); background:var(--paper);
+  color:var(--ink); padding:9px 12px; font-size:14px; font-family:inherit;
+  border-radius:var(--radius);
+}
+.search-input:focus-visible{ outline:3px solid var(--gold); outline-offset:1px; }
+.search-btn{
+  border:1px solid var(--ink); background:var(--ink); color:var(--paper);
+  padding:9px 16px; font-size:13px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.06em; border-radius:var(--radius); flex-shrink:0;
+}
+.search-btn:hover{ background:var(--crimson); border-color:var(--crimson); }
+.search-meta{ font-size:13px; color:var(--ink-soft); margin-bottom:20px; }
+.no-results{ font-size:15px; color:var(--ink-soft); padding:20px 0; }
+
+main{ max-width:1100px; margin:0 auto; padding:36px 24px 80px; }
+.view{ display:none; }
+.view.active{ display:block; }
+
+.featured{
+  display:grid; grid-template-columns:1.4fr 1fr; gap:36px;
+  border-bottom:1px solid var(--line); padding-bottom:34px; margin-bottom:34px;
+}
+.featured-media{
+  aspect-ratio:16/10; background:var(--paper-deep);
+  border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+  font-size:56px;
+}
+.eyebrow{
+  font-size:12px; color:var(--crimson); font-weight:600; text-transform:uppercase;
+  letter-spacing:.1em; margin-bottom:10px; display:block;
+}
+.featured h2{ font-size:38px; line-height:1.1; margin:0 0 12px; }
+.dek{ color:var(--ink-soft); font-size:16px; line-height:1.6; margin-bottom:14px; }
+.byline{ font-size:12px; color:var(--ink-soft); }
+
+.sidebar-list{ display:flex; flex-direction:column; gap:18px; }
+.sidebar-item{ display:flex; gap:12px; border-bottom:1px solid var(--line); padding-bottom:16px; }
+.sidebar-item:last-child{ border-bottom:none; }
+.sidebar-thumb{
+  width:64px; height:64px; flex-shrink:0; background:var(--paper-deep);
+  border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:22px;
+}
+.sidebar-item h3{ font-size:15px; margin:0 0 4px; line-height:1.3; }
+.sidebar-item .meta{ font-size:11px; color:var(--ink-soft); }
+
+.grid-heading{ font-size:26px; margin:0 0 22px; padding-bottom:10px; border-bottom:2px solid var(--ink); }
+.post-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:26px; }
+.card{ border:1px solid var(--line); background:var(--paper); display:flex; flex-direction:column; }
+.card-media{
+  aspect-ratio:4/3; background:var(--paper-deep); display:flex; align-items:center; justify-content:center; font-size:34px;
+  border-bottom:1px solid var(--line);
+}
+.card-body{ padding:14px; display:flex; flex-direction:column; gap:6px; flex:1; }
+.card-body h3{ font-size:17px; margin:0; line-height:1.3; }
+.card-body p{ font-size:13px; color:var(--ink-soft); margin:0; line-height:1.5; }
+.tag{
+  align-self:flex-start; font-size:11px; text-transform:uppercase; letter-spacing:.06em;
+  border:1px solid var(--gold); color:var(--gold); padding:3px 9px; border-radius:10px;
+}
+
+.back-link{ display:inline-block; margin-bottom:22px; font-size:13px; color:var(--navy); font-weight:600; }
+.post-detail h1{ font-size:40px; line-height:1.15; margin:6px 0 14px; }
+.post-detail .meta{ color:var(--ink-soft); font-size:13px; margin-bottom:24px; }
+.post-detail .body-text{ font-size:17px; line-height:1.8; max-width:70ch; }
+.post-detail .body-text p{ margin:0 0 18px; }
+.post-detail-media{
+  display:block; max-width:min(70ch,100%); max-height:75vh; width:auto; height:auto;
+  background:var(--paper-deep); border:1px solid var(--line); margin:0 0 22px;
+}
+.doc-box{
+  border:1px solid var(--ink); padding:20px; margin-top:20px; max-width:70ch;
+  display:flex; align-items:center; gap:16px; background:var(--paper-deep);
+}
+.doc-box .icon{ font-size:32px; }
+.doc-box a{ font-weight:600; color:var(--crimson); }
+
+.about-box{ max-width:70ch; }
+.about-box h1{ font-size:36px; margin-bottom:18px; }
+.about-box p{ font-size:16px; line-height:1.8; margin-bottom:16px; color:var(--ink-soft); }
+
+footer{
+  border-top:4px double var(--ink); padding:26px 24px; text-align:center;
+  font-size:12px; color:var(--ink-soft);
+}
+
+.footer-banner{
+  max-width:6000px; width:100%; height:auto; margin:0 auto 14px; display:block;
+}
+
+.footer-flag{
+  width:192px; height:117px; display:block; margin:10px auto 0;
+}
+
+body.rtl .featured{ direction:rtl; }
+body.rtl .sidebar-item{ direction:rtl; }
+body.rtl .doc-box{ direction:rtl; }
+body.rtl .back-link::before{ content:'→ '; }
+body:not(.rtl) .back-link::before{ content:'← '; }
+
+
+body.rtl .eyebrow, body.rtl .tag{ letter-spacing:0; text-transform:none; }
+body.rtl .eyebrow{ font-size:16px; }
+body.rtl .tag{ font-size:13px; padding:4px 11px; }
+body.rtl h1, body.rtl h2, body.rtl h3, body.rtl .serif{ line-height:1.5; }
+body.rtl .body-text, body.rtl .dek, body.rtl .card-body p, body.rtl .about-box p{ line-height:2; }
+body.rtl .sidebar-item h3, body.rtl .card-body h3{ line-height:1.6; }
+body.rtl .category-nav button{ letter-spacing:0; }
+
+@media(max-width:760px){
+  main{ padding:26px 16px 60px; }
+  .masthead{ padding:16px 16px 12px; }
+  .featured{ grid-template-columns:1fr; gap:24px; padding-bottom:24px; margin-bottom:24px; }
+  .brand-title{ font-size:24px; }
+  .brand-tagline{ font-size:11px; }
+  .featured h2{ font-size:28px; }
+  .post-detail h1{ font-size:28px; }
+  .grid-heading{ font-size:22px; }
+  .post-grid{ grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:16px; }
+  .masthead-tools{ gap:12px; }
+  .edition-stamp{ width:52px; height:52px; font-size:9px; }
+  .edition-stamp b{ font-size:10px; }
+  .lang-switch button{ padding:8px 10px; }
+  .doc-box{ flex-direction:column; align-items:flex-start; text-align:left; }
+  .nav-row{ flex-wrap:wrap; row-gap:10px; }
+  .category-nav{
+    overflow-x:visible; flex-wrap:wrap; gap:6px;
+    width:100%; order:2; justify-content:center;
+  }
+  .category-nav button{
+    padding:8px 14px; font-size:12px; border-radius:5px; top:0;
+    flex:1 1 auto; text-align:center;
+  }
+  .insta-link{ order:1; margin-left:auto; }
+  .insta-icon{ width:34px; height:34px; }
+  .post-detail-media{ margin-bottom:16px; }
+  footer{ padding:22px 12px; }
+}
+
+@media(max-width:420px){
+  .brand-tagline{ display:none; }
+  .logo-placeholder{ width:50px; height:50px; }
+  .brand-title{ font-size:20px; }
+  .masthead-top{ gap:10px; }
+  .lang-switch{ gap:5px; }
+  .lang-switch button{ padding:6px 7px; font-size:10.5px; gap:4px; }
+  .lang-switch img{ width:16px; height:11px; }
+  .featured h2{ font-size:24px; }
+  .post-detail h1{ font-size:24px; }
+  .post-grid{ grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
+  .category-nav button{ padding:7px 10px; font-size:10.5px; }
+  footer{ padding:18px 8px; }
+}
+
+@media(hover:none) and (pointer:coarse){
+  .category-nav button, .lang-switch button, .card, .sidebar-item a{ min-height:40px; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="brand">
+      <img class="logo-placeholder" src="images/logo-placeholder.png" alt="Site logo">
+      <div>
+        <div class="brand-title" data-i18n="siteTitle">The Daily Page</div>
+        <div class="brand-tagline" data-i18n="siteTagline">News, art & documents — in your language</div>
+      </div>
+    </div>
+    <div class="masthead-tools">
+      <div class="edition-stamp"><span data-i18n="editionLabel">EDITION</span><b id="editionDate">—</b></div>
+      <div class="lang-switch" id="langSwitch">
+        <button data-lang="en"><img src="images/flag-en.png" alt="English">English</button>
+        <button data-lang="fr"><img src="images/flag-fr.png" alt="Français">Français</button>
+        <button data-lang="ar"><img src="images/flag-ar.png" alt="العربية">العربية</button>
+      </div>
+    </div>
+  </div>
+  <div class="nav-row">
+    <nav class="category-nav" id="categoryNav"></nav>
+    <a class="insta-link" href="https://archive.org/details/@20061956/lists/3/documents" target="_blank" rel="noopener" aria-label="Instagram">
+      <img class="insta-icon" src="images/insta.png" alt="Instagram">
+    </a>
+  </div>
+  <form class="search-bar" id="searchBar" role="search">
+    <input type="search" id="searchInput" class="search-input" data-i18n-placeholder="searchPlaceholder" placeholder="Search...">
+    <button type="submit" class="search-btn" data-i18n="searchButton">Search</button>
+  </form>
+</header>
+
+<main>
+
+  <section class="view active" id="view-home">
+    <div class="featured" id="featuredSlot"></div>
+    <h2 class="grid-heading" data-i18n="latestHeading">Latest</h2>
+    <div class="post-grid" id="latestGrid"></div>
+  </section>
+
+  <section class="view" id="view-category">
+    <h2 class="grid-heading" id="categoryHeading"></h2>
+    <div class="post-grid" id="categoryGrid"></div>
+  </section>
+
+  <section class="view" id="view-post">
+    <a href="#" class="back-link" id="backLink" data-i18n="backLink">Back to home</a>
+    <div class="post-detail" id="postDetail"></div>
+  </section>
+
+  <section class="view" id="view-search">
+    <h2 class="grid-heading" id="searchHeading"></h2>
+    <p class="search-meta" id="searchMeta"></p>
+    <div class="post-grid" id="searchGrid"></div>
+  </section>
+
+  <section class="view" id="view-about">
+    <div class="about-box">
+      <h1 data-i18n="aboutTitle">About us</h1>
+      <p data-i18n="aboutBody1">Revolution and Liberation is an internationalist Communist platform for a better Socialist future.</p>
+      <p data-i18n="aboutBody2">Everything here is available in English, French and Arabic, so readers can follow us in the language they're most comfortable with.</p>
+      <p data-i18n="aboutBody3">Contact e-mail: assamanzbay@proton.me</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <img class="footer-banner" src="images/bann.png" alt="Banner">
+  <span data-i18n="footerText">© 2026 by Assam ANZBAY ⴰⵙⵙⴰⵎ ⴰⵏⵣⴱⴰⵢ</span>
+  <img class="footer-flag" src="images/revoltflag.png" alt="">
+</footer>
+
+<script>
+
+
+const UI_TEXT = {
+  en:{
+    siteTitle:"Revolution and Liberation ★ ⵜⴰⴳⵔⴰⵡⵍⴰ ⴷ ⵓⵙⴷⵔⴼⵉ", siteTagline:"The way of liberation is the socialist way",
+    editionLabel:"EDITION", latestHeading:"Latest", backLink:"Back to home",
+    aboutTitle:"About us",
+    aboutBody1:"Revolution and Liberation is an internationalist Communist platform for a better Socialist future.",
+    aboutBody2:"Everything here is available in English, French and Arabic, so readers can follow us in the language they're most comfortable with.",
+    aboutBody3:"Contact e-mail: assamanzbay@proton.me",
+    footerText:"2026 by Assam ANZBAY ⴰⵙⵙⴰⵎ ⴰⵏⵣⴱⴰⵢ",
+    navHome:"Home", navAbout:"About", catArticles:"Articles", catArt:"Art", catDocs:"Documents",
+    readMore:"Read more", openDocument:"Open document", byLabel:"By",
+    searchPlaceholder:"Search articles, art & documents…", searchButton:"Search",
+    searchHeading:"Search results", searchMetaFor:'Results for "{q}"', noResults:"No posts match your search.",
+    noPostsYet:"No posts published yet — check back soon."
+  },
+  fr:{
+    siteTitle:"Révolution et Libération ★ ⵜⴰⴳⵔⴰⵡⵍⴰ ⴷ ⵓⵙⴷⵔⴼⵉ", siteTagline:"La voie de la libération est la voie socialiste",
+    editionLabel:"ÉDITION", latestHeading:"Derniers articles", backLink:"Retour à l'accueil",
+    aboutTitle:"À propos",
+    aboutBody1:"Révolution et Libération est une plateforme communiste internationaliste pour un avenir socialiste meilleur.",
+    aboutBody2:"Tout ici est disponible en anglais, en français et en arabe, afin que chaque lecteur puisse nous suivre dans la langue de son choix.",
+    aboutBody3:"Adresse électronique de contact: assamanzbay@proton.me",
+    footerText:"2026 par Assam ANZBAY ⴰⵙⵙⴰⵎ ⴰⵏⵣⴱⴰⵢ",
+    navHome:"Accueil", navAbout:"À propos", catArticles:"Articles", catArt:"Art", catDocs:"Documents",
+    readMore:"Lire la suite", openDocument:"Ouvrir le document", byLabel:"Par",
+    searchPlaceholder:"Rechercher un article, une œuvre ou un document…", searchButton:"Rechercher",
+    searchHeading:"Résultats de recherche", searchMetaFor:'Résultats pour « {q} »', noResults:"Aucun article ne correspond à votre recherche.",
+    noPostsYet:"Aucun article publié pour le moment — revenez bientôt."
+  },
+  ar:{
+    siteTitle:"الثورة والتحرير ★ ⵜⴰⴳⵔⴰⵡⵍⴰ ⴷ ⵓⵙⴷⵔⴼⵉ", siteTagline:"نهج التحرير هو نهج الإشتراكية",
+    editionLabel:"العدد", latestHeading:"أحدث المقالات", backLink:"العودة إلى الصفحة الرئيسية",
+    aboutTitle:"من نحن",
+    aboutBody1:"الثورة والتحرير هي منصة شيوعية أممية لمستقبل إشتراكي أفضل.",
+    aboutBody2:"كل ما هنا متوفر بالإنجليزية والفرنسية والعربية، ليتمكن كل قارئ من متابعتنا باللغة التي يفضلها.",
+    aboutBody3:"البريد الإلكتروني: assamanzbay@proton.me",
+    footerText:"2026 ⴰⵙⵙⴰⵎ ⴰⵏⵣⴱⴰⵢ من قبل أسام أنزباي",
+    navHome:"الرئيسية", navAbout:"من نحن", catArticles:"مقالات", catArt:"فن", catDocs:"مستندات",
+    readMore:"اقرأ المزيد", openDocument:"فتح المستند", byLabel:"بقلم",
+    searchPlaceholder:"ابحث في المقالات والفن والمستندات…", searchButton:"بحث",
+    searchHeading:"نتائج البحث", searchMetaFor:'نتائج البحث عن "{q}"', noResults:"لا توجد منشورات مطابقة لبحثك.",
+    noPostsYet:"لم يتم نشر أي منشورات بعد — عد لاحقًا."
+  }
+};
+
+
+
+
+
+const POSTS = [];
+
+
+
+let currentLang = "en";
+let currentCategory = "articles";
+let currentPostId = null;
+
+const CATEGORIES = [
+  { id:"articles", key:"catArticles" },
+  { id:"art",  key:"catArt" },
+  { id:"docs", key:"catDocs" }
+];
+
+function t(key){ return (UI_TEXT[currentLang] && UI_TEXT[currentLang][key]) || key; }
+
+
+
+function updateURL(push = true){
+
+    const url = new URL(window.location);
+
+    url.searchParams.set("lang", currentLang);
+
+    if(currentView === "post" && currentPostId){
+        url.searchParams.set("post", currentPostId);
+    }else{
+        url.searchParams.delete("post");
+    }
+
+    if(currentView === "category"){
+        url.searchParams.set("category", currentCategory);
+    }else{
+        url.searchParams.delete("category");
+    }
+
+    if(currentView === "search" && currentSearchQuery){
+        url.searchParams.set("search", currentSearchQuery);
+    }else{
+        url.searchParams.delete("search");
+    }
+
+    if(push){
+        history.pushState({}, "", url);
+    }else{
+        history.replaceState({}, "", url);
+    }
+
+}
+
+
+
+function setLang(lang){
+  currentLang = lang;
+  const htmlEl = document.getElementById("htmlRoot");
+  htmlEl.lang = lang;
+  htmlEl.dir = (lang === "ar") ? "rtl" : "ltr";
+  document.body.classList.toggle("rtl", lang === "ar");
+  document.querySelectorAll("#langSwitch button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.lang === lang);
+  });
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  document.getElementById("editionDate").textContent = new Date().toLocaleDateString(
+    lang === "ar" ? "ar" : lang === "fr" ? "fr-FR" : "en-US",
+    { month:"short", day:"numeric", year:"numeric" }
+  );
+  renderNav();
+  renderCurrentView();
+  updateURL(false);
+}
+
+function renderNav(){
+  const nav = document.getElementById("categoryNav");
+  nav.innerHTML = "";
+  const homeBtn = document.createElement("button");
+  homeBtn.textContent = t("navHome");
+  homeBtn.className = currentView === "home" ? "active" : "";
+  homeBtn.onclick = ()=> showView("home");
+  nav.appendChild(homeBtn);
+
+  CATEGORIES.forEach(c=>{
+    const btn = document.createElement("button");
+    btn.textContent = t(c.key);
+    btn.className = (currentView === "category" && currentCategory === c.id) ? "active" : "";
+    btn.onclick = ()=> showCategory(c.id);
+    nav.appendChild(btn);
+  });
+
+  const aboutBtn = document.createElement("button");
+  aboutBtn.textContent = t("navAbout");
+  aboutBtn.className = currentView === "about" ? "active" : "";
+  aboutBtn.onclick = ()=> showView("about");
+  nav.appendChild(aboutBtn);
+}
+
+let currentView = "home";
+
+function showView(view){
+
+    currentView = view;
+
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+
+    document.getElementById("view-"+view).classList.add("active");
+
+    window.scrollTo({top:0,behavior:"smooth"});
+
+    renderNav();
+
+    renderCurrentView();
+
+    updateURL();
+
+}
+
+function showCategory(catId){
+    currentCategory = catId;
+    showView("category");
+}
+
+function showPost(id){
+    currentPostId = id;
+    showView("post");
+}
+
+function renderCurrentView(){
+  if(currentView === "home") renderHome();
+  if(currentView === "category") renderCategory();
+  if(currentView === "post") renderPost();
+  if(currentView === "search") renderSearch();
+}
+
+let currentSearchQuery = "";
+
+function postTime(p){
+  const ts = Number(p.ts);
+  if(Number.isFinite(ts) && ts > 0) return ts;
+  const parsed = new Date(p.date).getTime();
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function normalizeText(str){
+  return (str || "").toLowerCase();
+}
+
+function postMatchesQuery(post, q){
+  const needle = normalizeText(q);
+  if(!needle) return false;
+  return ["en","fr","ar"].some(lang=>{
+    const c = post[lang];
+    if(!c) return false;
+    const haystack = normalizeText([c.title, c.excerpt, c.body].filter(Boolean).join(" "));
+    return haystack.includes(needle);
+  });
+}
+
+function runSearch(query){
+  currentSearchQuery = query.trim();
+  if(!currentSearchQuery){ return; }
+  showView("search");
+}
+
+function renderSearch(){
+  document.getElementById("searchHeading").textContent = t("searchHeading");
+  document.getElementById("searchMeta").textContent =
+    t("searchMetaFor").replace("{q}", currentSearchQuery);
+
+  const results = POSTS
+    .filter(p=> postMatchesQuery(p, currentSearchQuery))
+    .sort((a,b)=> postTime(b) - postTime(a));
+
+  const grid = document.getElementById("searchGrid");
+  if(results.length === 0){
+    grid.innerHTML = `<p class="no-results">${t("noResults")}</p>`;
+  } else {
+    grid.innerHTML = results.map(cardHtml).join("");
+  }
+}
+
+function thumbSrc(post){
+  return post.thumbnailUrl || (post.type !== "document" ? post.fileUrl : null);
+}
+
+function mediaHtml(post, sizeClass){
+  const img = thumbSrc(post);
+  if(img){
+    return `<div class="${sizeClass}" style="background-image:url('${img}');background-size:cover;background-position:center;"></div>`;
+  }
+  return `<div class="${sizeClass}">${post.icon || "📰"}</div>`;
+}
+
+function bylineHtml(post){
+  const authorName = (currentLang === "ar" && post.authorAr) ? post.authorAr : post.author;
+  const photo = post.authorPhoto
+    ? `<img src="${post.authorPhoto}" alt="${authorName||''}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-inline-end:10px;border:1px solid var(--line);flex-shrink:0;">`
+    : "";
+  return `${photo}${t('byLabel')} ${authorName || ''} — ${post.date}`;
+}
+
+function cardHtml(post){
+  const c = post[currentLang];
+  return `<a class="card" href="#" onclick="showPost('${post.id}');return false;">
+    ${mediaHtml(post,"card-media")}
+    <div class="card-body">
+      <span class="tag">${t('cat'+post.category.charAt(0).toUpperCase()+post.category.slice(1)) || post.category}</span>
+      <h3>${c.title}</h3>
+      <p>${c.excerpt}</p>
+    </div>
+  </a>`;
+}
+
+function renderHome(){
+  const sorted = [...POSTS].sort((a,b)=> postTime(b) - postTime(a));
+  if(sorted.length === 0){
+    document.getElementById("featuredSlot").innerHTML = "";
+    document.getElementById("latestGrid").innerHTML = `<p class="no-results">${t('noPostsYet')}</p>`;
+    return;
+  }
+  const featured = sorted[0];
+  const rest = sorted.slice(1,4);
+  const fc = featured[currentLang];
+
+  document.getElementById("featuredSlot").innerHTML = `
+    <div>
+      ${mediaHtml(featured,"featured-media")}
+    </div>
+    <div>
+      <span class="eyebrow">${t('cat'+featured.category.charAt(0).toUpperCase()+featured.category.slice(1))}</span>
+      <h2><a href="#" onclick="showPost('${featured.id}');return false;">${fc.title}</a></h2>
+      <p class="dek">${fc.excerpt}</p>
+      <p class="byline">${bylineHtml(featured)}</p>
+    </div>
+  `;
+
+  document.getElementById("latestGrid").innerHTML =
+    sorted.slice(1).map(cardHtml).join("");
+}
+
+function renderCategory(){
+  document.getElementById("categoryHeading").textContent =
+    t('cat' + currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1));
+  const posts = POSTS.filter(p=>p.category===currentCategory)
+    .sort((a,b)=> postTime(b)-postTime(a));
+  document.getElementById("categoryGrid").innerHTML = posts.length
+    ? posts.map(cardHtml).join("")
+    : `<p class="no-results">${t('noPostsYet')}</p>`;
+}
+
+function renderPost(){
+  const post = POSTS.find(p=>p.id===currentPostId);
+  if(!post) return;
+  const c = post[currentLang];
+  let html = `<span class="eyebrow">${t('cat'+post.category.charAt(0).toUpperCase()+post.category.slice(1))}</span>
+    <h1>${c.title}</h1>
+    <p class="meta" style="display:flex;align-items:center;">${bylineHtml(post)}</p>`;
+
+  const img = thumbSrc(post);
+  if(img){
+    const safeAlt = (c.title || "").replace(/"/g,"&quot;");
+    html += `<img class="post-detail-media" src="${img}" alt="${safeAlt}">`;
+  }
+
+  if(post.type === "document"){
+    html += `<p class="body-text">${c.excerpt}</p>
+      <div class="doc-box">
+        <div class="icon">📄</div>
+        <div>
+          <div>${c.title}</div>
+          <a href="${post.fileUrl}" target="_blank" rel="noopener">${t('openDocument')} →</a>
+        </div>
+      </div>`;
+  } else {
+    const paragraphs = (c.body || "").split("\n\n").map(p=>`<p>${p}</p>`).join("");
+    html += `<div class="body-text">${paragraphs}</div>`;
+  }
+
+  document.getElementById("postDetail").innerHTML = html;
+}
+
+document.getElementById("backLink").onclick = (e)=>{ e.preventDefault(); showView("home"); };
+document.getElementById("searchBar").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  runSearch(document.getElementById("searchInput").value);
+});
+document.querySelectorAll("#langSwitch button").forEach(b=>{
+  b.onclick = ()=>{
+
+    setLang(b.dataset.lang);
+
+    updateURL();
+
+  };
+});
+
+const params = new URLSearchParams(location.search);
+
+const allowed = ["en", "fr", "ar"];
+const lang = allowed.includes(params.get("lang"))
+    ? params.get("lang")
+    : "en";
+
+setLang(lang);
+
+const post = params.get("post");
+const category = params.get("category");
+
+if(post){
+
+    currentPostId = post;
+    currentView = "post";
+
+}
+else if(category){
+
+    currentCategory = category;
+    currentView = "category";
+
+}
+else{
+
+    currentView = "home";
+
+}
+
+document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+document.getElementById("view-" + currentView).classList.add("active");
+
+renderNav();
+renderCurrentView();
+
+
+window.addEventListener("popstate", () => {
+
+    const params = new URLSearchParams(location.search);
+
+    currentLang = params.get("lang") || "en";
+    currentCategory = params.get("category") || "articles";
+    currentPostId = params.get("post");
+    currentSearchQuery = params.get("search") || "";
+
+    if(currentPostId){
+        currentView = "post";
+    }
+    else if(params.get("category")){
+        currentView = "category";
+    }
+    else if(params.get("search")){
+        currentView = "search";
+    }
+    else{
+        currentView = "home";
+    }
+
+    setLang(currentLang);
+
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+
+    document.getElementById("view-" + currentView).classList.add("active");
+
+    renderCurrentView();
+
+});
+
+
+(function loadDynamicPosts(){
+  fetch("data/posts.json?v=" + Date.now(), {cache:"no-store"})
+    .then(r=> r.ok ? r.json() : [])
+    .then(posts=>{
+      posts.forEach(p=> POSTS.push(p)); 
+      renderCurrentView();
+    })
+    .catch(()=>{  });
+})();
+</script>
+</body>
+</html>
